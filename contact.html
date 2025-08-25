@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BookNest | ติดต่อ</title>
+    <meta name="description" content="ติดต่อทีมงาน BookNest เพื่อแนะนำหนังสือหรือสอบถามข้อมูล" />
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="./index.html">BookNest</a>
+        <nav class="nav">
+          <a href="./index.html">หน้าแรก</a>
+          <a href="./books.html">รายการหนังสือ</a>
+          <a href="./contact.html" aria-current="page">ติดต่อ</a>
+          <a href="./login.html" id="loginLink">เข้าสู่ระบบ</a>
+          <a href="./profile.html" id="profileLink" style="display: none;">โปรไฟล์</a>
+          <a href="#" id="logoutLink" style="display: none;">ออกจากระบบ</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="section">
+      <div class="container narrow">
+        <h1 class="section-title">ติดต่อเรา</h1>
+        <p class="muted">มีคำแนะนำหนังสือดี ๆ หรือข้อเสนอแนะ ส่งถึงเราได้เลย</p>
+
+        <form class="form" action="mailto:example@example.com" method="post">
+          <div class="form-row">
+            <label for="name">ชื่อ</label>
+            <input id="name" name="name" type="text" placeholder="ชื่อของคุณ" required />
+          </div>
+          <div class="form-row">
+            <label for="email">อีเมล</label>
+            <input id="email" name="email" type="email" placeholder="you@example.com" required />
+          </div>
+          <div class="form-row">
+            <label for="message">ข้อความ</label>
+            <textarea id="message" name="message" rows="6" placeholder="พิมพ์ข้อความของคุณที่นี่"></textarea>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" type="submit">ส่งข้อความ</button>
+            <a class="btn" href="./index.html">ยกเลิก</a>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p>© <span id="year"></span> BookNest</p>
+        <nav class="nav small">
+          <a href="./index.html">หน้าแรก</a>
+          <a href="./books.html">รายการหนังสือ</a>
+          <a href="./contact.html">ติดต่อ</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+      
+      // ตรวจสอบสถานะการล็อกอิน
+      function checkAuthStatus() {
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        const loginLink = document.getElementById('loginLink');
+        const profileLink = document.getElementById('profileLink');
+        const logoutLink = document.getElementById('logoutLink');
+        
+        if (isLoggedIn) {
+          loginLink.style.display = 'none';
+          profileLink.style.display = 'inline-block';
+          logoutLink.style.display = 'inline-block';
+        } else {
+          loginLink.style.display = 'inline-block';
+          profileLink.style.display = 'none';
+          logoutLink.style.display = 'none';
+        }
+      }
+      
+      // จัดการการออกจากระบบ
+      document.getElementById('logoutLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        if (confirm('คุณต้องการออกจากระบบหรือไม่?')) {
+          localStorage.removeItem('isLoggedIn');
+          localStorage.removeItem('userEmail');
+          localStorage.removeItem('userRole');
+          
+          alert('ออกจากระบบแล้ว');
+          checkAuthStatus();
+        }
+      });
+      
+      // ตรวจสอบสถานะเมื่อโหลดหน้า
+      checkAuthStatus();
+    </script>
+  </body>
+  </html>
+

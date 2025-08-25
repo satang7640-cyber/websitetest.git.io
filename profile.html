@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="th">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BookNest | โปรไฟล์</title>
+    <meta name="description" content="จัดการโปรไฟล์และข้อมูลส่วนตัวของคุณ" />
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="./index.html">BookNest</a>
+            <nav class="nav">
+                <a href="./index.html">หน้าแรก</a>
+                <a href="./books.html">รายการหนังสือ</a>
+                <a href="./contact.html">ติดต่อ</a>
+                <a href="./profile.html" aria-current="page">โปรไฟล์</a>
+                <a href="#" id="logoutBtn">ออกจากระบบ</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="section">
+        <div class="container">
+            <div class="profile-header">
+                <h1 class="section-title">โปรไฟล์ของฉัน</h1>
+                <p class="muted">จัดการข้อมูลส่วนตัวและดูประวัติการใช้งาน</p>
+            </div>
+
+            <div class="profile-grid">
+                <div class="profile-card">
+                    <h3>ข้อมูลส่วนตัว</h3>
+                    <div class="profile-info">
+                        <div class="info-row">
+                            <span class="info-label">อีเมล:</span>
+                            <span class="info-value" id="userEmail">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">สถานะ:</span>
+                            <span class="info-value" id="userRole">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">วันที่สมัคร:</span>
+                            <span class="info-value" id="joinDate">-</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-ghost" id="editProfileBtn">แก้ไขโปรไฟล์</button>
+                </div>
+
+                <div class="profile-card">
+                    <h3>หนังสือที่ชอบ</h3>
+                    <div class="favorites-list" id="favoritesList">
+                        <p class="muted">ยังไม่มีหนังสือที่ชอบ</p>
+                    </div>
+                    <a href="./books.html" class="btn btn-primary">ดูรายการหนังสือ</a>
+                </div>
+
+                <div class="profile-card">
+                    <h3>ประวัติการอ่าน</h3>
+                    <div class="reading-history" id="readingHistory">
+                        <p class="muted">ยังไม่มีประวัติการอ่าน</p>
+                    </div>
+                </div>
+
+                <div class="profile-card" id="adminPanel" style="display: none;">
+                    <h3>แผงผู้ดูแลระบบ</h3>
+                    <div class="admin-actions">
+                        <button class="btn btn-primary" onclick="manageUsers()">จัดการผู้ใช้</button>
+                        <button class="btn btn-ghost" onclick="viewAnalytics()">ดูสถิติ</button>
+                        <button class="btn btn-ghost" onclick="manageBooks()">จัดการหนังสือ</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal แก้ไขโปรไฟล์ -->
+            <div class="modal" id="editProfileModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>แก้ไขโปรไฟล์</h3>
+                        <button class="modal-close" id="closeModal">&times;</button>
+                    </div>
+                    <form class="form" id="editProfileForm">
+                        <div class="form-row">
+                            <label for="editName">ชื่อ-นามสกุล</label>
+                            <input id="editName" name="name" type="text" placeholder="ชื่อของคุณ" required />
+                        </div>
+                        <div class="form-row">
+                            <label for="editBio">ข้อมูลส่วนตัว</label>
+                            <textarea id="editBio" name="bio" rows="3" placeholder="บอกเราเกี่ยวกับตัวคุณ"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn btn-primary" type="submit">บันทึก</button>
+                            <button class="btn btn-ghost" type="button" id="cancelEdit">ยกเลิก</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <p>© <span id="year"></span> BookNest</p>
+            <nav class="nav small">
+                <a href="./index.html">หน้าแรก</a>
+                <a href="./books.html">รายการหนังสือ</a>
+                <a href="./contact.html">ติดต่อ</a>
+            </nav>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+        
+        // ตรวจสอบสถานะการล็อกอิน
+        function checkAuth() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (!isLoggedIn) {
+                alert('กรุณาเข้าสู่ระบบก่อน');
+                window.location.href = './login.html';
+                return;
+            }
+            
+            // แสดงข้อมูลผู้ใช้
+            displayUserInfo();
+        }
+        
+        // แสดงข้อมูลผู้ใช้
+        function displayUserInfo() {
+            const userEmail = localStorage.getItem('userEmail');
+            const userRole = localStorage.getItem('userRole');
+            
+            document.getElementById('userEmail').textContent = userEmail;
+            document.getElementById('userRole').textContent = userRole === 'admin' ? 'ผู้ดูแลระบบ' : 'ผู้ใช้ทั่วไป';
+            document.getElementById('joinDate').textContent = new Date().toLocaleDateString('th-TH');
+            
+            // แสดงแผงผู้ดูแลระบบถ้าเป็น admin
+            if (userRole === 'admin') {
+                document.getElementById('adminPanel').style.display = 'block';
+            }
+        }
+        
+        // จัดการการออกจากระบบ
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            if (confirm('คุณต้องการออกจากระบบหรือไม่?')) {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userRole');
+                
+                alert('ออกจากระบบแล้ว');
+                window.location.href = './index.html';
+            }
+        });
+        
+        // จัดการการแก้ไขโปรไฟล์
+        document.getElementById('editProfileBtn').addEventListener('click', function() {
+            document.getElementById('editProfileModal').style.display = 'block';
+        });
+        
+        // ปิด modal
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('editProfileModal').style.display = 'none';
+        });
+        
+        document.getElementById('cancelEdit').addEventListener('click', function() {
+            document.getElementById('editProfileModal').style.display = 'none';
+        });
+        
+        // ปิด modal เมื่อคลิกนอกพื้นที่
+        window.addEventListener('click', function(e) {
+            const modal = document.getElementById('editProfileModal');
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+        
+        // จัดการการส่งฟอร์มแก้ไขโปรไฟล์
+        document.getElementById('editProfileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('editName').value;
+            const bio = document.getElementById('editBio').value;
+            
+            // บันทึกข้อมูล (จำลอง)
+            localStorage.setItem('userName', name);
+            localStorage.setItem('userBio', bio);
+            
+            alert('บันทึกข้อมูลสำเร็จ');
+            document.getElementById('editProfileModal').style.display = 'none';
+        });
+        
+        // ฟังก์ชันสำหรับผู้ดูแลระบบ
+        function manageUsers() {
+            alert('ฟีเจอร์จัดการผู้ใช้จะเปิดใช้งานในอนาคต');
+        }
+        
+        function viewAnalytics() {
+            alert('ฟีเจอร์ดูสถิติจะเปิดใช้งานในอนาคต');
+        }
+        
+        function manageBooks() {
+            alert('ฟีเจอร์จัดการหนังสือจะเปิดใช้งานในอนาคต');
+        }
+        
+        // ตรวจสอบการล็อกอินเมื่อโหลดหน้า
+        checkAuth();
+    </script>
+</body>
+</html>

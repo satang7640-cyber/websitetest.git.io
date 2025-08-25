@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BookNest | รายการหนังสือ</title>
+  <meta name="description" content="รายการหนังสือที่คัดสรร แบ่งตามหมวดหมู่" />
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="./index.html">BookNest</a>
+              <nav class="nav">
+            <a href="./index.html">หน้าแรก</a>
+            <a href="./books.html" aria-current="page">รายการหนังสือ</a>
+            <a href="./contact.html">ติดต่อ</a>
+            <a href="./login.html" id="loginLink">เข้าสู่ระบบ</a>
+            <a href="./profile.html" id="profileLink" style="display: none;">โปรไฟล์</a>
+            <a href="#" id="logoutLink" style="display: none;">ออกจากระบบ</a>
+        </nav>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container">
+      <h1 class="section-title">รายการหนังสือ</h1>
+
+      <div class="filters">
+        <span class="muted">หมวดหมู่:</span>
+        <a class="chip active" href="#all">ทั้งหมด</a>
+        <a class="chip" href="#novel">นิยาย</a>
+        <a class="chip" href="#nonfiction">สารคดี</a>
+        <a class="chip" href="#selfhelp">พัฒนาตนเอง</a>
+      </div>
+
+      <div class="grid cards">
+        <article class="card">
+          <img src="https://th.readme.me/f/31671/5e71d23c5b5c2e7c35689fe2.png" alt="ปกนิยายโทนเข้ม" />
+          <div class="card-body">
+            <h3>เงาในความทรงจำ</h3>
+            <p class="muted">นิยายดราม่า</p>
+            <p>เรื่องราวที่พาผู้อ่านสำรวจอดีตและการเยียวยาใจอย่างอ่อนโยน</p>
+            <div class="card-actions">
+              <a class="btn btn-ghost" href="#">รายละเอียด</a>
+              <button class="btn btn-like" data-book-id="1" onclick="toggleLike(this)">
+                <span class="like-icon">♡</span> <span class="like-text">ชอบ</span>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <img src="https://picsum.photos/seed/nonfic1/600/400" alt="ปกหนังสือสารคดี" />
+          <div class="card-body">
+            <h3>โลกในหนึ่งวัน</h3>
+            <p class="muted">สารคดี</p>
+            <p>บันทึกวิถีชีวิตผู้คนทั่วโลกใน 24 ชั่วโมง เติมมุมมองใหม่ให้การใช้ชีวิต</p>
+            <div class="card-actions">
+              <a class="btn btn-ghost" href="#">รายละเอียด</a>
+              <button class="btn btn-like" data-book-id="2" onclick="toggleLike(this)">
+                <span class="like-icon">♡</span> <span class="like-text">ชอบ</span>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <img src="https://picsum.photos/seed/self1/600/400" alt="ปกแนวพัฒนาตนเอง" />
+          <div class="card-body">
+            <h3>นิสัยเล็ก ผลลัพธ์ใหญ่</h3>
+            <p class="muted">พัฒนาตนเอง</p>
+            <p>ปรับชีวิตด้วยนิสัยเล็ก ๆ ที่ทำได้จริงและวัดผลได้</p>
+            <div class="card-actions">
+              <a class="btn btn-ghost" href="#">รายละเอียด</a>
+              <button class="btn btn-like" data-book-id="3" onclick="toggleLike(this)">
+                <span class="like-icon">♡</span> <span class="like-text">ชอบ</span>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <img src="https://picsum.photos/seed/novel2/600/400" alt="ปกนิยายแนวลึกลับ" />
+          <div class="card-body">
+            <h3>รหัสแห่งดาว</h3>
+            <p class="muted">นิยายลึกลับ</p>
+            <p>ปริศนาจากท้องฟ้าที่พาไปสู่ความลับของอดีตอันยาวนาน</p>
+            <div class="card-actions">
+              <a class="btn btn-ghost" href="#">รายละเอียด</a>
+              <button class="btn btn-like" data-book-id="4" onclick="toggleLike(this)">
+                <span class="like-icon">♡</span> <span class="like-text">ชอบ</span>
+              </button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© <span id="year"></span> BookNest</p>
+      <nav class="nav small">
+        <a href="./index.html">หน้าแรก</a>
+        <a href="./books.html">รายการหนังสือ</a>
+        <a href="./contact.html">ติดต่อ</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    
+    // ตรวจสอบสถานะการล็อกอิน
+    function checkAuthStatus() {
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      const loginLink = document.getElementById('loginLink');
+      const profileLink = document.getElementById('profileLink');
+      const logoutLink = document.getElementById('logoutLink');
+      
+      if (isLoggedIn) {
+        loginLink.style.display = 'none';
+        profileLink.style.display = 'inline-block';
+        logoutLink.style.display = 'inline-block';
+      } else {
+        loginLink.style.display = 'inline-block';
+        profileLink.style.display = 'none';
+        logoutLink.style.display = 'none';
+      }
+    }
+    
+    // จัดการการออกจากระบบ
+    document.getElementById('logoutLink').addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      if (confirm('คุณต้องการออกจากระบบหรือไม่?')) {
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userRole');
+        
+        alert('ออกจากระบบแล้ว');
+        checkAuthStatus();
+      }
+    });
+    
+    // ฟังก์ชันสลับสถานะ "ชอบ"
+    function toggleLike(button) {
+      const isLoggedIn = localStorage.getItem('isLoggedIn');
+      
+      if (!isLoggedIn) {
+        alert('กรุณาเข้าสู่ระบบก่อนเพื่อใช้ฟีเจอร์นี้');
+        return;
+      }
+      
+      const likeIcon = button.querySelector('.like-icon');
+      const likeText = button.querySelector('.like-text');
+      const bookId = button.getAttribute('data-book-id');
+      
+      if (likeIcon.textContent === '♡') {
+        likeIcon.textContent = '♥';
+        likeIcon.style.color = '#ff6b6b';
+        likeText.textContent = 'ชอบแล้ว';
+        button.classList.add('liked');
+        
+        // บันทึกหนังสือที่ชอบ
+        const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        if (!favorites.includes(bookId)) {
+          favorites.push(bookId);
+          localStorage.setItem('favorites', JSON.stringify(favorites));
+        }
+        
+        alert('เพิ่มหนังสือในรายการที่ชอบแล้ว!');
+      } else {
+        likeIcon.textContent = '♡';
+        likeIcon.style.color = '';
+        likeText.textContent = 'ชอบ';
+        button.classList.remove('liked');
+        
+        // ลบหนังสือออกจากรายการที่ชอบ
+        const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        const index = favorites.indexOf(bookId);
+        if (index > -1) {
+          favorites.splice(index, 1);
+          localStorage.setItem('favorites', JSON.stringify(favorites));
+        }
+        
+        alert('ลบหนังสือออกจากรายการที่ชอบแล้ว');
+      }
+    }
+    
+    // ตรวจสอบสถานะเมื่อโหลดหน้า
+    checkAuthStatus();
+  </script>
+</body>
+
+</html>
